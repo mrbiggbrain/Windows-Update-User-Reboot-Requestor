@@ -113,30 +113,71 @@ $Form.Controls.Add($Message)
 $Form.Controls.Add($Line)
 
 $RebootTime = 60
-
-while ($true)
+while($true)
 {
-  $Results = $Form.ShowDialog()
+  $Pending = Test-PendingReboot
 
-  if($Results -eq "Yes")
+  while ($Pending)
   {
-    Exit
-  }
-  elseif($Results -eq "Ignore")
-  {
-    Start-Sleep -Seconds ($RebootTime * 60)
+    $Results = $Form.ShowDialog()
 
-    if($RebootTime -gt 15)
+    if($Results -eq "Yes")
     {
-      $RebootTime = $RebootTime / 2
+      shutdown /r /t 0
     }
-    elseif($RebootTime -eq 15)
+    elseif($Results -eq "Ignore")
     {
-      $RebootTime = 5
-    }
+      Start-Sleep -Seconds ($RebootTime * 60)
 
-    $DelayButton.Text = "Pause $($RebootTime) Minutes"
+      if($RebootTime -gt 15)
+      {
+        $RebootTime = $RebootTime / 2
+      }
+      elseif($RebootTime -eq 15)
+      {
+        $RebootTime = 5
+      }
+
+      $DelayButton.Text = "Pause $($RebootTime) Minutes"
+    }
   }
+
+  Start-Sleep -Seconds 3600
+
 }
 
+
 $Form.Close() 
+# SIG # Begin signature block
+# MIIFwwYJKoZIhvcNAQcCoIIFtDCCBbACAQExDzANBglghkgBZQMEAgEFADB5Bgor
+# BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD4EAOpiu3pEPnf
+# 1SlXy3J49bzCN+sQAcOa3XZUSbjFa6CCAzMwggMvMIICF6ADAgECAhBkZclq7tAC
+# lU0E/Xxpc6rbMA0GCSqGSIb3DQEBBQUAMCAxHjAcBgNVBAMMFU5ETSBDb2RlIFNp
+# Z25pbmcgQ2VydDAeFw0yMzA3MjMxNjQ0MzBaFw0zMzA3MjMxNjU0MzBaMCAxHjAc
+# BgNVBAMMFU5ETSBDb2RlIFNpZ25pbmcgQ2VydDCCASIwDQYJKoZIhvcNAQEBBQAD
+# ggEPADCCAQoCggEBAL9Hwyt8JhRaR9CqpOOdMJ6pSJnoEV0G4NvjA8PcEqhu7I8H
+# Qg/hrw8bmha9sIv69SVeXi2vLWX/ofiw7aBujncUFvfuWqn4ZChwaEfGUXYU7m2B
+# KBR2dcQiN2RuMBLgg/cGd3yxFRMIvirGeIfW2rWpR1g9ZeIOMF7YUP2VSJavb87b
+# l/+f1p/aiCuXeCMkAV58xj10XaxWINgGNNNG0bZXVUuSxBMZCGq9oLVIrR4Lc3sO
+# we0FQtI9XuZOgKtNJXrmCMkiHEkJyWdpOm34FQMr080Ic0R0+CXHgN8uY31YvxoD
+# 7uiUO9WHiDOiqHhhjDTw5e+zFofW2LKHOxIPouUCAwEAAaNlMGMwDgYDVR0PAQH/
+# BAQDAgeAMBMGA1UdJQQMMAoGCCsGAQUFBwMDMB0GA1UdEQQWMBSCEm5kbWhvc3Bp
+# dGFsaXR5LmNvbTAdBgNVHQ4EFgQUcocAPXMvpG3T/ifKpF/8CCZbTNwwDQYJKoZI
+# hvcNAQEFBQADggEBALz/mRjKZ7mrlhSR6wnrZ38gCzMLQeXrg2wGMoy1Cc4R81oR
+# OG6y60eUBVKkRkhXIEi4dgkLRW4+G5qUBRm9eDSES5aFjrjo8HlPxx+EtCXBy5kg
+# uBjE87TqEHsVi2221j0LLqZOZcqaRXk+lYQAmaPPxKiRfnPdYpG1YQaFrOOXyjMH
+# 5vcK6PXvtLSa39LO2sez3reQ9daRZkiknSHiZmXZLvl5wVWOQ6If0okb1X5kmZ1X
+# LhKEKOijH2ucHmKroTO3wq8/PjOH7G9VVVylh+Q8Bw3vHnKMNL5vfLyffBR4gJJ3
+# dQa3miqhLDKvr3Wy3NZEuM0Jav2T48guGSdrkPYxggHmMIIB4gIBATA0MCAxHjAc
+# BgNVBAMMFU5ETSBDb2RlIFNpZ25pbmcgQ2VydAIQZGXJau7QApVNBP18aXOq2zAN
+# BglghkgBZQMEAgEFAKCBhDAYBgorBgEEAYI3AgEMMQowCKACgAChAoAAMBkGCSqG
+# SIb3DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQBgjcCAQsxDjAMBgorBgEEAYI3
+# AgEVMC8GCSqGSIb3DQEJBDEiBCBoFArjqVMmzbm48Pe836xfuN2ztmLtcV/vSZPg
+# Z8Dg5DANBgkqhkiG9w0BAQEFAASCAQCUAe492o83dH3N3gSa5ysoX6gYCnD/eLWV
+# OV9/XlQlaQQ4VxYPqhr+hFVUyH/v/OFvJdeU0SwsEhMPHmDtNyzCcNJacO2fikrM
+# RAS/eomZ4TsBgRwgYJngtajiUMpsoR/U2G4F3Big+2y88DT2KyVya4c+54nRDnk8
+# 6YXUJWrzEINUw0uUC+fvuaBd4qI7WIKsoyAlizHvRnLSrWmA8qfWcwyCipEtf7ge
+# CDgVrF6/CebVqmC4FB+BIQymc5ZZ+hpGRDJx4cF33403eEkJ6BUbj+95pekCmWgu
+# 6avpObJQ8AFr0g4IyVt8rVYUViHTMU56Ns+hgc4k3B04F173V+gh
+# SIG # End signature block
