@@ -123,7 +123,7 @@ while($true)
 
     if($Results -eq "Yes")
     {
-      shutdown /r /t 0
+      shutdown /f /r /t 0
     }
     elseif($Results -eq "Ignore")
     {
