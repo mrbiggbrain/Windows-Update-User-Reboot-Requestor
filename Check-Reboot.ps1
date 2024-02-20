@@ -38,12 +38,11 @@ function Test-PendingReboot
 }
 
 $Running = Get-WmiObject Win32_Process -Filter "Name='powershell.exe' AND CommandLine LIKE '%check-reboot.ps1%'"
-if($Running)
+if($Running.count -gt 1)
 {
   Write-host "Already Running"
   exit
 }
-
 
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") 
 $monitor = [System.Windows.Forms.Screen]::PrimaryScreen
