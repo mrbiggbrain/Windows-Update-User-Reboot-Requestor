@@ -40,7 +40,6 @@ function Test-PendingReboot
 $Running = Get-WmiObject Win32_Process -Filter "Name='powershell.exe' AND CommandLine LIKE '%check-reboot.ps1%'"
 if($Running.count -gt 1)
 {
-  Write-host "Already Running"
   exit
 }
 
