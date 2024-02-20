@@ -37,17 +37,13 @@ function Test-PendingReboot
  return $false
 }
 
-# Create an event mapper to ensure the script only runs once.
-$AppId = '56fcd693-919e-4a1b-9bcb-625c9e79ca6d'
-$CreatedNew = $false
-$script:SingleInstanceEvent = New-Object Threading.EventWaitHandle $true, ([Threading.EventResetMode]::ManualReset), "Global\$AppID", ([ref] $CreatedNew)
-
-if($CreatedNew -eq $false)
+$Running = Get-WmiObject Win32_Process -Filter "Name='powershell.exe' AND CommandLine LIKE '%check-reboot.ps1%'"
+if($Running)
 {
-  # Already Running
-  Write-Host "Already Running"
+  Write-host "Already Running"
   exit
 }
+
 
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") 
 $monitor = [System.Windows.Forms.Screen]::PrimaryScreen
